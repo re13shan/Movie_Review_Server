@@ -1,6 +1,8 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const movieRoutes = require("./routes/movie");
+const loginRoutes = require("./routes/login");
+const registerRoutes = require("./routes/register");
 const path = require("path");
 const fs = require("fs");
 const mongoose = require("mongoose");
@@ -40,14 +42,9 @@ mongoose.connect("mongodb://localhost:27017/movieDB")
 
 
 
-// app.get('/movielist', (req, res) => {
-//     let data = "";
-//     let readable = fs.createReadStream("./popular-movies.json", 'utf8');
-//     readable.pipe(res);
-// });
-
-
 app.use("/api/movies", movieRoutes);
+app.use("/login", loginRoutes);
+app.use("/register", registerRoutes);
 
 
 app.use((err, req, res, next) => {
@@ -60,7 +57,7 @@ app.use((err, req, res, next) => {
     } else {
         next();
     }
-    res.end(`hi how are you`);
+    //res.end(`hi how are you`);
 });
 
 module.exports = app;

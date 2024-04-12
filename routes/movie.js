@@ -8,8 +8,7 @@ router.get("/getMovieList", async (req, res) => {
         const pageSize = Number(req.query.pageSize) ?? 5;
         const pageNumber = Number(req.query.pageNumber) ?? 1;
         console.log(pageSize);
-        //1 * 2 = 2
-        //2 * 2 = 4 // will skip first four data
+
         let results = await Movie.find().select({ __v: 0, likes: 0 }).skip((pageNumber - 1) * pageSize).limit(pageSize);
         console.log(results);
         return res.status(200).json(
