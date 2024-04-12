@@ -4,7 +4,7 @@ const router = express.Router();
 
 router.get("/getMovieList", async (req, res) => {
     try {
-        console.log(req.query);
+        //console.log(req.query);
         const pageSize = Number(req.query.pageSize) ?? 5;
         const pageNumber = Number(req.query.pageNumber) ?? 1;
         console.log(pageSize);
@@ -49,10 +49,25 @@ router.post("/addMovies", async (req, res) => {
 router.put("/update/:id", async (req, res) => {
     const newReview = req.body.review;
     const username = req.body.userName;
-    console.log(`review is ${username}`);
+    const like = req.body.likings;
+
+
     const filter = {
         _id: req.params.id,
     };
+    const data = await Movie.findOne({ _id: req.params.id });
+    if (like) {
+        console.log(`liked`);
+        data.liked = data.liked + 1;
+    }
+    else {
+        console.log(`disliked`);
+    }
+
+    console.log(`the number of reviews  ${data.numOfReviews}`);
+    data.numOfReviews = data.numOfReviews + 1;
+    console.log(`the updated num of reviews  ${data.numOfReviews}`);
+    data.rating = (data.liked / data.numOfReviews) * 100;
     const update = {
         $push: {
             reviews: {
@@ -61,8 +76,14 @@ router.put("/update/:id", async (req, res) => {
             }
         }
     }
+    const update2 = {
+        rating: data.rating,
+        numOfReviews: data.numOfReviews,
+        liked: data.liked
+    }
     try {
         const response = await Movie.updateOne(filter, update);
+        const response2 = await Movie.updateOne(filter, update2);
         if (response) {
             return res.status(200).json({
                 success: true,
@@ -74,6 +95,7 @@ router.put("/update/:id", async (req, res) => {
                 error: err.message || "Something went wrong"
             });
         }
+
 
     } catch (err) {
         return res.status(500).json({

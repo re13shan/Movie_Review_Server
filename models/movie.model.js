@@ -28,6 +28,14 @@ const movieSchema = mongoose.Schema({
         type: Number,
         default: 0
     },
+    numOfReviews: {
+        type: Number,
+        default: 0
+    },
+    liked: {
+        type: Number,
+        default: 0
+    },
     reviews: [
         {
             type: reviewSchema,
