@@ -18,7 +18,10 @@ router.post('', async (req, res, next) => {
             if (user.password === password) {
                 console.log("Password Checked");
                 const data = {
-                    users: { id: user.id }
+                    users: {
+                        id: user.id,
+                        name: user.name
+                    }
                 };
 
                 const authToken = jwt.sign(
@@ -26,7 +29,7 @@ router.post('', async (req, res, next) => {
                     TOKEN_KEY,
 
                 );
-                return res.json({ token: authToken, success: true });
+                return res.json({ token: authToken, success: true, id: user._id, name: user.name });
             }
             else {
                 return res.json({ token: null, success: false });
